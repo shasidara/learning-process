@@ -2,17 +2,18 @@ const express = require("express");
 
 const app = express();
 
-app.get("/user", (req, res) => {
-    res.send({ name: "Shasidara", age: 20 });
-});
-
-app.post("/user", (req, res) => {
-    console.log("User created successfully");
-    res.send("User created successfully");
-});
-
-app.delete("/user", (req, res) => {
-    res.send("User deleted successfully");
+app.use("/user", (req, res, next) => {
+    console.log("route 1");
+    next();
+    res.send("Response 1");
+}, 
+(req, res, next) => {
+    console.log("route 2");
+    next();
+},
+(req, res, next) => {
+    console.log("route 3");
+    next();
 });
 
 app.listen(2006, () => {

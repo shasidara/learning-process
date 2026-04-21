@@ -1,34 +1,33 @@
 const express = require("express");
-const { userAuth, adminAuth } = require("../middleware/auth");
+const { connectDB } = require("./config/database");
+const User = require("./models/user");
 
 const app = express();
 
-app.get("/user/data", userAuth, (req, res) => {
+app.post("/signup", async (req, res) => {
+    const user = new User({
+        firstName: "Virat",
+        lastName: "Kohli",
+        email: "virat@gmail.com",
+        password: "Vit@123",
+    });
+
     try {
-        res.send("User data sent successfully");
+        await user.save();
+        res.send("User signed up successfully!");
     } catch (err) {
-        res.status(500).send("Something went wrong");
+        res.status(400).send("Something went wrong");
     };
 });
 
-app.post("/user/postData", userAuth, (req, res) => {
-    try {
-        res.send ("User data posted successfully");
-    } catch (err) {
-        res.status(500).send("Something went wrong");
-    }
-});
-
-app.get("/admin/getData", adminAuth, (req, res) => {
-    try {
-        res.send("Admin data sent successfully");
-    } catch (err) {
-        res.status(500).send("Something went wrong");
-    }
+connectDB().then(() => {
+        console.log("Database connected successfully!");
+        app.listen(2006, () => {
+        console.log("Server is successfully listen on path 2006...");
+    });
+}).catch((err) => {
+    console.error("Database is not connected!!", err.message);
 });
 
 
 
-app.listen(2006, () => {
-    console.log("Server is successfully listen on path 2006");
-});
